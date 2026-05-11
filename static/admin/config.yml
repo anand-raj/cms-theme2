@@ -124,9 +124,6 @@ collections:
         widget: boolean
         default: true
 
-      - *f_states
-      - *f_featureinhomepage
-
       - &f_body
         label: Body
         name: body
