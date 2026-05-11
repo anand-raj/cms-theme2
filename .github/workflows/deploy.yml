@@ -28,7 +28,7 @@ jobs:
 
       - name: Fetch state content — Karnataka
         run: |
-          git clone --depth=1 https://github.com/anand-raj/cms-content-karnataka.git /tmp/karnataka
+          git clone --depth=1 https://github.com/anand-raj/cms-theme2-karnataka.git /tmp/karnataka
           [ -d /tmp/karnataka/content/articles ] && cp -r /tmp/karnataka/content/articles/. content/articles/ || true
           [ -d /tmp/karnataka/content/events ]   && cp -r /tmp/karnataka/content/events/.   content/events/   || true
           [ -d /tmp/karnataka/content/news ]     && cp -r /tmp/karnataka/content/news/.     content/news/     || true
