@@ -1,0 +1,88 @@
+{{ define "main" }}
+
+{{ $now    := now }}
+{{ $pages  := .Pages.ByDate.Reverse }}
+
+<div class="list-hero">
+  <div class="list-hero-inner">
+    <h1 class="list-hero-title">{{ .Title }}</h1>
+    {{ with .Description }}<p class="list-hero-desc">{{ . }}</p>{{ end }}
+  </div>
+</div>
+
+<div class="content-wrap content-wrap--wide">
+  {{ if $pages }}
+
+  {{/* ── Upcoming events first ───────────────────────────────────────────── */}}
+  {{ $upcoming := slice }}
+  {{ $past     := slice }}
+  {{ range $pages }}
+    {{ $evDate := .Date }}
+    {{ with .Params.event_date }}{{ $evDate = (time .) }}{{ end }}
+    {{ if $evDate.After $now }}
+      {{ $upcoming = $upcoming | append . }}
+    {{ else }}
+      {{ $past = $past | append . }}
+    {{ end }}
+  {{ end }}
+
+  {{ if $upcoming }}
+  <section class="state-chapter-section">
+    <h2>Upcoming Events</h2>
+    <div class="state-chapter-grid">
+      {{ range $upcoming }}
+      {{ $p := . }}
+      {{ $evDate := .Date }}
+      {{ with .Params.event_date }}{{ $evDate = (time .) }}{{ end }}
+      <article class="post-card">
+        {{ with .Params.image }}
+          {{ partial "post-image.html" (dict "page" $p "src" . "width" "600" "alt" $p.Title "class" "post-card-image-link" "href" $p.RelPermalink "loading" "lazy") }}
+        {{ end }}
+        <div class="post-card-body">
+          <div class="state-chapter-type-badge state-chapter-type-badge--event">Event</div>
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <div class="event-meta-inline">
+            <time datetime="{{ $evDate.Format "2006-01-02" }}">{{ $evDate.Format "Mon, Jan 2, 2006" }}</time>
+            {{ with .Params.event_location }} · <span>{{ . }}</span>{{ end }}
+          </div>
+          {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ if $past }}
+  <section class="state-chapter-section">
+    <h2>Past Events</h2>
+    <div class="state-chapter-grid">
+      {{ range $past }}
+      {{ $p := . }}
+      {{ $evDate := .Date }}
+      {{ with .Params.event_date }}{{ $evDate = (time .) }}{{ end }}
+      <article class="post-card">
+        {{ with .Params.image }}
+          {{ partial "post-image.html" (dict "page" $p "src" . "width" "600" "alt" $p.Title "class" "post-card-image-link" "href" $p.RelPermalink "loading" "lazy") }}
+        {{ end }}
+        <div class="post-card-body">
+          <div class="state-chapter-type-badge state-chapter-type-badge--event">Event</div>
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <div class="event-meta-inline">
+            <time datetime="{{ $evDate.Format "2006-01-02" }}">{{ $evDate.Format "Mon, Jan 2, 2006" }}</time>
+            {{ with .Params.event_location }} · <span>{{ . }}</span>{{ end }}
+          </div>
+          {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ else }}
+  <p class="no-posts">No events yet.</p>
+  {{ end }}
+</div>
+
+{{ end }}

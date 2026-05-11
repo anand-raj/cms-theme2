@@ -88,6 +88,23 @@ collections:
         default: false
         hint: "Mark this post to appear in the home page hero slider"
 
+      - &f_states
+        label: State Chapter
+        name: states
+        widget: select
+        multiple: true
+        required: false
+        hint: "Select the state this content belongs to."
+        options:
+          - { label: "Karnataka", value: "karnataka" }
+
+      - &f_featureinhomepage
+        label: Feature in Home Page (State Chapters)
+        name: featureinhomepage
+        widget: boolean
+        default: false
+        hint: "Show this post in the 'From State Chapters' section on the home page"
+
       - &f_priority
         label: Priority
         name: priority
@@ -106,6 +123,9 @@ collections:
         name: comments
         widget: boolean
         default: true
+
+      - *f_states
+      - *f_featureinhomepage
 
       - &f_body
         label: Body
@@ -141,6 +161,8 @@ collections:
           default: false
         hint: "Paste an image URL (e.g. https://images.unsplash.com/photo-ID?w=1200&fm=webp&q=80)"
       - *f_slider
+      - *f_states
+      - *f_featureinhomepage
       - *f_body
 
   - name: settings
@@ -279,3 +301,80 @@ collections:
             name: color_pre_bg
             widget: color
             default: "#1e293b"
+
+  - name: events
+    label: Events
+    folder: content/events
+    create: true
+    path: "{{slug}}/index"
+    media_folder: images
+    public_folder: images
+    preview_path: events/{{slug}}/
+    fields:
+      - *f_title
+      - *f_date
+      - *f_lastmod
+      - *f_draft
+      - *f_desc
+      - *f_author
+      - label: Event Date
+        name: event_date
+        widget: datetime
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        required: false
+      - label: Event End Date
+        name: event_end_date
+        widget: datetime
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        required: false
+      - label: Location
+        name: event_location
+        widget: string
+        required: false
+        hint: "e.g. Cubbon Park, Bengaluru, Karnataka"
+      - label: Registration URL
+        name: registration_url
+        widget: string
+        required: false
+        hint: "External link to registration page"
+      - label: Categories
+        name: categories
+        widget: list
+        default: ["Events"]
+      - *f_tags
+      - label: Hero Image
+        name: image
+        widget: image
+        required: false
+        choose_url: true
+        media_libraries:
+          default: false
+        hint: "Paste an image URL (e.g. https://images.unsplash.com/photo-ID?w=1200&fm=webp&q=80)"
+      - *f_states
+      - *f_featureinhomepage
+      - *f_body
+
+  - name: state_chapters
+    label: State Chapters
+    description: "Manage the list of state chapters shown in the nav and /states/ page."
+    files:
+      - name: states
+        label: State Chapters Registry
+        file: data/states.yml
+        fields:
+          - label: States
+            name: states
+            widget: list
+            fields:
+              - label: Name
+                name: name
+                widget: string
+                hint: "Display name, e.g. Karnataka"
+              - label: Slug
+                name: slug
+                widget: string
+                hint: "URL slug, e.g. karnataka"
+              - label: Description
+                name: description
+                widget: text
+                required: false

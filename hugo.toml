@@ -23,6 +23,20 @@ cleanDestinationDir = true
   category = "categories"
   state    = "states"
 
+[module]
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "state-repos/state-karnataka/content/articles"
+    target = "content/articles"
+  [[module.mounts]]
+    source = "state-repos/state-karnataka/content/news"
+    target = "content/news"
+  [[module.mounts]]
+    source = "state-repos/state-karnataka/content/events"
+    target = "content/events"
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 

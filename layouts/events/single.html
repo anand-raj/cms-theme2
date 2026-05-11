@@ -1,0 +1,76 @@
+{{ define "main" }}
+{{ $s := hugo.Data.settings }}
+
+{{ $evDate := .Date }}
+{{ with .Params.event_date }}{{ $evDate = (time .) }}{{ end }}
+{{ $evEndDate := .Date }}
+{{ with .Params.event_end_date }}{{ $evEndDate = (time .) }}{{ end }}
+
+<div class="content-wrap">
+<article class="post">
+
+  {{/* ── Hero Image ─────────────────────────────────────────────────────── */}}
+  {{ with .Params.image }}
+  <figure class="post-hero">
+    {{ partial "post-image.html" (dict "page" $ "src" . "width" "1200" "alt" $.Title "loading" "eager") }}
+  </figure>
+  {{ end }}
+
+  <div class="post-layout">
+    <div class="post-layout__main">
+      <header class="post-header">
+        <div class="state-chapter-type-badge state-chapter-type-badge--event">Event</div>
+        <h1 class="post-title">{{ .Title }}</h1>
+
+        {{/* ── Event meta ─────────────────────────────────────────────────── */}}
+        <div class="event-meta">
+          <div class="event-meta-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <time datetime="{{ $evDate.Format "2006-01-02" }}">{{ $evDate.Format "Monday, January 2, 2006 · 3:04 PM" }}</time>
+            {{ if ne ($evDate.Format "2006-01-02") ($evEndDate.Format "2006-01-02") }}
+              &ndash; <time datetime="{{ $evEndDate.Format "2006-01-02" }}">{{ $evEndDate.Format "January 2, 2006" }}</time>
+            {{ end }}
+          </div>
+          {{ with .Params.event_location }}
+          <div class="event-meta-row">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>{{ . }}</span>
+          </div>
+          {{ end }}
+          {{ with .Params.registration_url }}
+          <div class="event-meta-row">
+            <a class="btn-register" href="{{ . }}" target="_blank" rel="noopener noreferrer">Register →</a>
+          </div>
+          {{ end }}
+        </div>
+
+        {{ with .Description }}<p class="post-desc">{{ . }}</p>{{ end }}
+      </header>
+
+      <div class="post-content">
+        {{ .Content }}
+      </div>
+
+      {{/* ── Prev / Next ──────────────────────────────────────────────────── */}}
+      {{ if $s.news_show_prev_next }}
+      <nav class="post-prevnext" aria-label="Previous and next event">
+        {{ with .PrevInSection }}
+        <a class="post-prevnext-prev" href="{{ .RelPermalink }}">
+          <span>{{ i18n "prev" }}</span>
+          <strong>{{ .Title }}</strong>
+        </a>
+        {{ end }}
+        {{ with .NextInSection }}
+        <a class="post-prevnext-next" href="{{ .RelPermalink }}">
+          <span>{{ i18n "next" }}</span>
+          <strong>{{ .Title }}</strong>
+        </a>
+        {{ end }}
+      </nav>
+      {{ end }}
+    </div>
+  </div>
+
+</article>
+</div>
+{{ end }}
