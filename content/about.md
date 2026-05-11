@@ -3,25 +3,25 @@ title: "About"
 date: 2025-01-01
 draft: false
 layout: about
-description: "ಈ ತಾಣದ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ."
+description: "Learn about this site."
 ---
 
-## ನಮ್ಮ ಬಗ್ಗೆ
+## About Us
 
-ಈ ತಾಣಕ್ಕೆ ನಿಮಗೆ ಸ್ವಾಗತ. ಇದು ಕರ್ನಾಟಕದ ಸುದ್ದಿ, ಲೇಖನಗಳು ಮತ್ತು ಸ್ಥಳೀಯ ವಿಷಯಗಳನ್ನು ಕನ್ನಡದಲ್ಲಿ ತಲುಪಿಸಲು ನಿರ್ಮಿಸಲಾದ ತಾಣ. ನಮ್ಮ ಉದ್ದೇಶ ಸರಳ — ಕನ್ನಡ ಓದುಗರಿಗೆ ಗುಣಮಟ್ಟದ ಮಾಹಿತಿಯನ್ನು ಅವರ ಭಾಷೆಯಲ್ಲೇ ಉಚಿತವಾಗಿ ನೀಡುವುದು.
+Welcome to this site. We cover news, articles, and stories from Karnataka and beyond, with a focus on topics that matter to our readers. Our goal is simple — deliver quality information, clearly and freely.
 
-## ನಾವು ಏನು ಪ್ರಕಟಿಸುತ್ತೇವೆ?
+## What We Publish
 
-ಈ ತಾಣದಲ್ಲಿ ಮೂರು ಮುಖ್ಯ ವಿಭಾಗಗಳಿವೆ:
+The site has two main sections:
 
-**ಸುದ್ದಿ** — ಕರ್ನಾಟಕ ಮತ್ತು ಭಾರತದ ಪ್ರಮುಖ ಘಟನೆಗಳ ಸಂಕ್ಷಿಪ್ತ ಮತ್ತು ಸ್ಪಷ್ಟ ವರದಿ. ರಾಜಕೀಯ, ಪರಿಸರ, ಆರ್ಥಿಕ ಮತ್ತು ಸಾಮಾಜಿಕ ವಿಷಯಗಳ ಮೇಲೆ ನಮ್ಮ ಗಮನ ನೆಲೆಗೊಂಡಿದೆ.
+**News** — Concise, clear reporting on events from Karnataka and India. Our coverage spans politics, environment, economy, and society.
 
-**ಲೇಖನಗಳು** — ತಂತ್ರಜ್ಞಾನ, ಸಂಸ್ಕೃತಿ, ಪ್ರಕೃತಿ ಮತ್ತು ಇತರ ವಿಷಯಗಳ ಮೇಲಿನ ಆಳವಾದ ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಬರಹಗಳು. ಇಲ್ಲಿ ಪ್ರತಿಯೊಂದು ಲೇಖನವೂ ಪ್ರಾಮಾಣಿಕ ಸಂಶೋಧನೆ ಮತ್ತು ಹೃದಯದ ಮಾತುಗಳಿಂದ ತುಂಬಿದೆ.
+**Articles** — In-depth, analytical writing on technology, culture, nature, and more. Every piece is grounded in honest research and written with care.
 
-## ನಮ್ಮ ತಂತ್ರಜ್ಞಾನ
+## Our Technology
 
-ಈ ತಾಣವನ್ನು [Hugo](https://gohugo.io) ಎಂಬ ಸ್ಥಿರ ತಾಣ ನಿರ್ಮಾಣ ಸಾಧನ ಬಳಸಿ ನಿರ್ಮಿಸಲಾಗಿದೆ. ವಿಷಯ ನಿರ್ವಹಣೆಗಾಗಿ [Sveltia CMS](https://github.com/sveltia/sveltia-cms) ಬಳಸಲಾಗುತ್ತಿದೆ ಮತ್ತು ತಾಣವನ್ನು GitHub Pages ಮೂಲಕ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ. ಇದು ಸಂಪೂರ್ಣ ತೆರೆದ ಮೂಲ ತಂತ್ರಜ್ಞಾನವನ್ನು ಬಳಸಿ ನಿರ್ಮಿಸಿದ JAMstack ತಾಣ.
+This site is built with [Hugo](https://gohugo.io), a fast static site generator. Content is managed through [Sveltia CMS](https://github.com/sveltia/sveltia-cms) and published via GitHub Pages. It is a fully open-source JAMstack site.
 
-## ಸಂಪರ್ಕಿಸಿ
+## Get in Touch
 
-ನಿಮ್ಮ ಅಭಿಪ್ರಾಯಗಳು, ಸಲಹೆಗಳು ಅಥವಾ ಲೇಖನ ಸಹಭಾಗಿತ್ವಕ್ಕೆ ಕೆಳಗಿನ ಸಂಪರ್ಕ ಮಾಧ್ಯಮಗಳ ಮೂಲಕ ತಲುಪಿ. ನಿಮ್ಮ ಕನ್ನಡ ಧ್ವನಿಗೆ ಇಲ್ಲಿ ಯಾವಾಗಲೂ ಜಾಗವಿದೆ.
+We welcome feedback, suggestions, and contributions. Reach out through the social links in the footer — there is always room for your voice here.
