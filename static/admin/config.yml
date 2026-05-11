@@ -5,15 +5,15 @@ backend:
   base_url: https://sveltia-cms-auth.e-anandraj.workers.dev
 
 # Store media in the page bundle alongside content
-media_folder: content/en/articles
+media_folder: content/articles
 public_folder: /articles
 
 site_url: https://anand-raj.github.io/cms-hugo-sveltia-theme1/
 
 collections:
   - name: articles
-    label: Articles (EN)
-    folder: content/en/articles
+    label: Articles
+    folder: content/articles
     create: true
     path: "{{slug}}/index"
     media_folder: images
@@ -113,8 +113,8 @@ collections:
         widget: markdown
 
   - name: news
-    label: News (EN)
-    folder: content/en/news
+    label: News
+    folder: content/news
     create: true
     path: "{{slug}}/index"
     media_folder: images
@@ -131,70 +131,6 @@ collections:
         name: categories
         widget: list
         default: ["News"]
-      - *f_tags
-      - label: Hero Image
-        name: image
-        widget: image
-        required: false
-        choose_url: true
-        media_libraries:
-          default: false
-        hint: "Paste an image URL (e.g. https://images.unsplash.com/photo-ID?w=1200&fm=webp&q=80)"
-      - *f_slider
-      - *f_body
-
-  - name: articles_kn
-    label: Articles (KN - ಕನ್ನಡ)
-    folder: content/kn/articles
-    create: true
-    path: "{{slug}}/index"
-    media_folder: images
-    public_folder: images
-    preview_path: kn/articles/{{slug}}/
-    fields:
-      - *f_title
-      - *f_date
-      - *f_lastmod
-      - *f_draft
-      - *f_desc
-      - *f_author
-      - label: Categories
-        name: categories
-        widget: list
-        default: ["Tech"]
-      - *f_tags
-      - label: Hero Image
-        name: image
-        widget: image
-        required: false
-        choose_url: true
-        media_libraries:
-          default: false
-        hint: "Paste an image URL (e.g. https://images.unsplash.com/photo-ID?w=1200&fm=webp&q=80)"
-      - *f_slider
-      - *f_priority
-      - *f_toc
-      - *f_body
-
-  - name: news_kn
-    label: News (KN - ಕನ್ನಡ)
-    folder: content/kn/news
-    create: true
-    path: "{{slug}}/index"
-    media_folder: images
-    public_folder: images
-    preview_path: kn/news/{{slug}}/
-    fields:
-      - *f_title
-      - *f_date
-      - *f_lastmod
-      - *f_draft
-      - *f_desc
-      - *f_author
-      - label: Categories
-        name: categories
-        widget: list
-        default: ["ಸುದ್ದಿ"]
       - *f_tags
       - label: Hero Image
         name: image
@@ -292,11 +228,7 @@ collections:
             hint: "Max news items shown per page"
 
           # ── Navigation ───────────────────────────────────────────────────
-          - label: "Show Language Switcher"
-            name: show_language_switcher
-            widget: boolean
-            default: true
-            hint: "Show the language switcher in the mobile menu"
+
 
           # ── Fonts ─────────────────────────────────────────────────────────
           - label: Body Font
@@ -309,16 +241,6 @@ collections:
             widget: string
             default: "Inter"
             hint: "Any Google Fonts family name — e.g. Playfair Display, Raleway"
-          - label: Kannada Body Font
-            name: kannada_body_font
-            widget: string
-            default: "Baloo Tamma 2"
-            hint: "Google Fonts family for Kannada body/paragraph text — e.g. Baloo Tamma 2, Noto Sans Kannada"
-          - label: Kannada Heading Font
-            name: kannada_heading_font
-            widget: string
-            default: "Baloo Tamma 2"
-            hint: "Google Fonts family for Kannada headings — e.g. Baloo Tamma 2, Noto Serif Kannada"
 
           # ── Colours ───────────────────────────────────────────────────────
           - label: Primary (header, headings)

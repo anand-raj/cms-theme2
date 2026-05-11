@@ -1,49 +1,22 @@
 baseURL = '/'
-languageCode = 'kn'
-defaultContentLanguage = 'kn'
-defaultContentLanguageInSubdir = false
+languageCode = 'en'
 title = 'My New Hugo Project'
 cleanDestinationDir = true
 
-[languages.kn]
-  languageName = "ಕನ್ನಡ"
-  weight = 1
-  contentDir = "content/kn"
+[[menus.main]]
+  name   = "Articles"
+  url    = "/articles/"
+  weight = 10
 
-  [[languages.kn.menus.main]]
-    name       = "ಲೇಖನಗಳು"
-    url        = "/articles/"
-    weight     = 10
+[[menus.main]]
+  name   = "News"
+  url    = "/news/"
+  weight = 30
 
-  [[languages.kn.menus.main]]
-    name       = "ಸುದ್ದಿ"
-    url        = "/news/"
-    weight     = 30
-
-  [[languages.kn.menus.main]]
-    name       = "ನಮ್ಮ ಬಗ್ಗೆ"
-    url        = "/about/"
-    weight     = 50
-
-[languages.en]
-  languageName = "EN"
-  weight = 2
-  contentDir = "content/en"
-
-  [[languages.en.menus.main]]
-    name       = "Articles"
-    url        = "/en/articles/"
-    weight     = 10
-
-  [[languages.en.menus.main]]
-    name       = "News"
-    url        = "/en/news/"
-    weight     = 30
-
-  [[languages.en.menus.main]]
-    name       = "About"
-    url        = "/en/about/"
-    weight     = 50
+[[menus.main]]
+  name   = "About"
+  url    = "/about/"
+  weight = 50
 
 [taxonomies]
   tag      = "tags"

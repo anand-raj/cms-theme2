@@ -16,8 +16,6 @@
 {{ $s := hugo.Data.settings }}
 {{ $bodyFont           := default "Inter" $s.body_font }}
 {{ $headingFont        := default "Inter" $s.heading_font }}
-{{ $kannadaBodyFont    := default "Baloo Tamma 2" $s.kannada_body_font }}
-{{ $kannadaHeadingFont := default "Baloo Tamma 2" $s.kannada_heading_font }}
 {{ $primary     := default "#1a1a2e" $s.color_primary }}
 {{ $accent      := default "#e94560" $s.color_accent }}
 {{ $textColor   := default "#333333" $s.color_text }}
@@ -41,21 +39,6 @@
 {{ end }}
 {{ end }}
 
-{{/* Load Kannada fonts from settings */}}
-{{ $kannadaFontsToLoad := slice }}
-{{ if not (in $systemFonts $kannadaBodyFont) }}
-  {{ $kannadaFontsToLoad = $kannadaFontsToLoad | append $kannadaBodyFont }}
-{{ end }}
-{{ if and (not (in $systemFonts $kannadaHeadingFont)) (ne $kannadaHeadingFont $kannadaBodyFont) }}
-  {{ $kannadaFontsToLoad = $kannadaFontsToLoad | append $kannadaHeadingFont }}
-{{ end }}
-{{ if gt (len $kannadaFontsToLoad) 0 }}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-{{ range $kannadaFontsToLoad }}
-<link href="{{ printf "https://fonts.googleapis.com/css2?family=%s:wght@400;700&display=swap" (. | replaceRE " " "+") | safeURL }}" rel="stylesheet">
-{{ end }}
-{{ end }}
 
 <style>
 :root {
@@ -71,8 +54,6 @@
   --color-subtle:  {{ $subtle }};
   --color-pre-bg:  {{ $preBg }};
   --color-nav:            {{ $navColor }};
-  --font-kannada-body:    '{{ $kannadaBodyFont }}', sans-serif;
-  --font-kannada-heading: '{{ $kannadaHeadingFont }}', sans-serif;
 }
 </style>
 
