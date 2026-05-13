@@ -1,4 +1,5 @@
 {{ define "main" }}
+{{ $s := hugo.Data.settings }}
 
 {{/* ── Resolve the state data entry for this taxonomy term ─────────────────── */}}
 {{ $stateSlug := .Page.Title | urlize }}
@@ -20,7 +21,7 @@
 
 <div class="content-wrap content-wrap--wide">
 
-{{ $pages    := .Pages }}
+{{ $pages    := .Pages.ByLastmod.Reverse }}
 {{ $articles := where $pages "Section" "articles" }}
 {{ $news     := where $pages "Section" "news" }}
 {{ $events   := where $pages "Section" "events" }}
@@ -29,70 +30,176 @@
   <p class="no-posts">No content for this state chapter yet.</p>
 {{ else }}
 
-  {{/* ── Articles ─────────────────────────────────────────────────────────── */}}
+  {{/* ════════════════════════════════════════════════════════════════════════
+       ARTICLES — priority layout: 1 hero + secondary grid + tertiary list
+       ════════════════════════════════════════════════════════════════════════ */}}
   {{ if $articles }}
   <section class="state-chapter-section">
     <div class="state-chapter-section-header">
       <h2>Articles</h2>
-      <a class="state-chapter-section-more" href="{{ site.BaseURL }}articles/">All Articles →</a>
     </div>
-    <div class="state-chapter-grid">
-      {{ range $articles }}
-      {{ $p := . }}
+
+    {{/* Hero: first article tagged primary, fallback to first overall */}}
+    {{ $hero          := index $articles 0 }}
+    {{ $primaryTagged := where $articles "Params.priority" "primary" }}
+    {{ if $primaryTagged }}{{ $hero = index $primaryTagged 0 }}{{ end }}
+
+    {{/* Secondary = tagged secondary + overflow primaries (2nd+) */}}
+    {{ $overflowPrimary := after 1 $primaryTagged }}
+    {{ $secondaryTagged := where $articles "Params.priority" "secondary" }}
+    {{ $secondarySet    := slice }}
+    {{ range $secondaryTagged }}{{ $secondarySet = $secondarySet | append .Permalink }}{{ end }}
+    {{ range $overflowPrimary }}{{ $secondarySet = $secondarySet | append .Permalink }}{{ end }}
+
+    {{ $secondary := slice }}
+    {{ $tertiary  := slice }}
+    {{ range $articles }}
+      {{ if eq .Permalink $hero.Permalink }}
+      {{ else if in $secondarySet .Permalink }}
+        {{ $secondary = $secondary | append . }}
+      {{ else }}
+        {{ $tertiary = $tertiary | append . }}
+      {{ end }}
+    {{ end }}
+
+    {{/* Hero */}}
+    <div class="month-primary">
+      {{ with $hero.Params.image }}
+      <a class="month-primary-img" href="{{ $hero.RelPermalink }}">
+        {{ partial "post-image.html" (dict "page" $hero "src" . "width" "900" "alt" $hero.Title "loading" "eager") }}
+      </a>
+      {{ end }}
+      <div class="month-primary-body">
+        <h2 class="month-primary-title"><a href="{{ $hero.RelPermalink }}">{{ $hero.Title }}</a></h2>
+        {{ with $hero.Description }}<p class="month-primary-desc">{{ . }}</p>{{ end }}
+        <div class="card-byline">
+          <span>{{ math.Max 1 (math.Round (div (countwords $hero.Content) 200.0)) }} {{ i18n "min_read" }}</span>
+        </div>
+        <a class="featured-post-cta" href="{{ $hero.RelPermalink }}">{{ i18n "read_article" }}</a>
+      </div>
+    </div>
+
+    {{/* Secondary grid */}}
+    {{ if $secondary }}
+    <div class="month-secondary-grid">
+      {{ range $secondary }}
+      {{ $card := . }}
       <article class="post-card">
         {{ with .Params.image }}
-          {{ partial "post-image.html" (dict "page" $p "src" . "width" "600" "alt" $p.Title "class" "post-card-image-link" "href" $p.RelPermalink "loading" "lazy") }}
+          {{ partial "post-image.html" (dict "page" $card "src" . "width" "600" "alt" $card.Title "class" "post-card-image-link" "href" $card.RelPermalink "loading" "lazy") }}
         {{ end }}
         <div class="post-card-body">
-          <div class="state-chapter-type-badge">Article</div>
-          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
+          <h3><a href="{{ $card.RelPermalink }}">{{ $card.Title }}</a></h3>
+          {{ with $card.Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
           <div class="card-byline">
-            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-            {{ with .Params.author }} · <span>{{ . }}</span>{{ end }}
+            <span>{{ math.Max 1 (math.Round (div (countwords $card.Content) 200.0)) }} {{ i18n "min_read" }}</span>
           </div>
         </div>
       </article>
       {{ end }}
     </div>
+    {{ end }}
+
+    {{/* Tertiary list */}}
+    {{ if $tertiary }}
+    <div class="month-tertiary-wrap">
+      <div class="month-tertiary-list">
+        {{ range $tertiary }}
+        {{ $tart := . }}
+        <a class="month-tertiary-item" href="{{ .RelPermalink }}">
+          {{ with .Params.image }}
+          <div class="month-tertiary-thumb">
+            {{ partial "post-image.html" (dict "page" $tart "src" . "width" "120" "alt" $tart.Title "loading" "lazy") }}
+          </div>
+          {{ end }}
+          <span class="month-tertiary-title">{{ .Title }}</span>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
   </section>
   {{ end }}
 
-  {{/* ── News ────────────────────────────────────────────────────────────── */}}
+  {{/* ════════════════════════════════════════════════════════════════════════
+       NEWS — lead story + featured grid + compact list
+       ════════════════════════════════════════════════════════════════════════ */}}
   {{ if $news }}
   <section class="state-chapter-section">
     <div class="state-chapter-section-header">
       <h2>News</h2>
-      <a class="state-chapter-section-more" href="{{ site.BaseURL }}news/">All News →</a>
     </div>
-    <div class="state-chapter-grid">
-      {{ range $news }}
-      {{ $p := . }}
+
+    {{/* Lead story */}}
+    {{ $lead := index $news 0 }}
+    <div class="news-lead">
+      {{ with $lead.Params.image }}
+      <a class="news-lead-img" href="{{ $lead.RelPermalink }}">
+        {{ partial "post-image.html" (dict "page" $lead "src" . "width" "900" "alt" $lead.Title "loading" "eager") }}
+      </a>
+      {{ end }}
+      <div class="news-lead-body">
+        <div class="news-label">{{ i18n "lead_story" }}</div>
+        <h2 class="news-lead-title"><a href="{{ $lead.RelPermalink }}">{{ $lead.Title }}</a></h2>
+        {{ with $lead.Description }}<p class="news-lead-desc">{{ . }}</p>{{ end }}
+        <div class="card-byline">
+          <time datetime="{{ $lead.Date.Format "2006-01-02" }}">{{ $lead.Date.Format "January 2, 2006" }}</time>
+        </div>
+        <a class="news-lead-cta" href="{{ $lead.RelPermalink }}">{{ i18n "read_story" }}</a>
+      </div>
+    </div>
+
+    {{/* Featured grid: items 2–7 */}}
+    {{ $newsFeatured := first 6 (after 1 $news) }}
+    {{ if $newsFeatured }}
+    <div class="news-featured-grid">
+      {{ range $newsFeatured }}
+      {{ $card := . }}
       <article class="post-card">
         {{ with .Params.image }}
-          {{ partial "post-image.html" (dict "page" $p "src" . "width" "600" "alt" $p.Title "class" "post-card-image-link" "href" $p.RelPermalink "loading" "lazy") }}
+          {{ partial "post-image.html" (dict "page" $card "src" . "width" "700" "alt" $card.Title "class" "post-card-image-link" "href" $card.RelPermalink "loading" "lazy") }}
         {{ end }}
         <div class="post-card-body">
-          <div class="state-chapter-type-badge state-chapter-type-badge--news">News</div>
-          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
+          <h3><a href="{{ $card.RelPermalink }}">{{ $card.Title }}</a></h3>
+          {{ with $card.Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
           <div class="card-byline">
-            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-            {{ with .Params.author }} · <span>{{ . }}</span>{{ end }}
+            <time datetime="{{ $card.Date.Format "2006-01-02" }}">{{ $card.Date.Format "Jan 2, 2006" }}</time>
           </div>
         </div>
       </article>
       {{ end }}
     </div>
+    {{ end }}
+
+    {{/* Compact list: items 8+ */}}
+    {{ $newsCompact := after 7 $news }}
+    {{ if $newsCompact }}
+    <div class="news-compact-list">
+      {{ range $newsCompact }}
+      {{ $p := . }}
+      <a class="news-compact-item" href="{{ .RelPermalink }}">
+        {{ with .Params.image }}
+        <div class="news-compact-thumb">
+          {{ partial "post-image.html" (dict "page" $p "src" . "width" "160" "alt" $p.Title "loading" "lazy") }}
+        </div>
+        {{ end }}
+        <span class="news-compact-title">{{ .Title }}</span>
+      </a>
+      {{ end }}
+    </div>
+    {{ end }}
+
   </section>
   {{ end }}
 
-  {{/* ── Events ───────────────────────────────────────────────────────────── */}}
+  {{/* ════════════════════════════════════════════════════════════════════════
+       EVENTS
+       ════════════════════════════════════════════════════════════════════════ */}}
   {{ if $events }}
   <section class="state-chapter-section">
     <div class="state-chapter-section-header">
       <h2>Events</h2>
-      <a class="state-chapter-section-more" href="{{ site.BaseURL }}events/">All Events →</a>
     </div>
     <div class="state-chapter-grid">
       {{ range $events }}

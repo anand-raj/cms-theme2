@@ -6,6 +6,10 @@
 {{ $evEndDate := .Date }}
 {{ with .Params.event_end_date }}{{ $evEndDate = (time .) }}{{ end }}
 
+{{/* Derive event slug and state for the registration form */}}
+{{ $evSlug  := .File.Dir | strings.TrimRight "/" | path.Base }}
+{{ $evState := index (.Params.states | default slice) 0 | default "" }}
+
 <div class="content-wrap">
 <article class="post">
 
@@ -37,11 +41,6 @@
             <span>{{ . }}</span>
           </div>
           {{ end }}
-          {{ with .Params.registration_url }}
-          <div class="event-meta-row">
-            <a class="btn-register" href="{{ . }}" target="_blank" rel="noopener noreferrer">Register →</a>
-          </div>
-          {{ end }}
         </div>
 
         {{ with .Description }}<p class="post-desc">{{ . }}</p>{{ end }}
@@ -50,6 +49,113 @@
       <div class="post-content">
         {{ .Content }}
       </div>
+
+      {{/* ── Inline Registration Form ─────────────────────────────────────── */}}
+      {{ with .Params.registration_url }}
+      {{ $workerUrl := $s.events_worker_url | default "https://cms-events-theme2.e-anandraj.workers.dev" }}
+      <section class="event-register" id="event-register">
+        <h2 class="event-register__title">Register for this Event</h2>
+
+        <form id="event-reg-form" class="event-reg-form" novalidate>
+          {{/* Honeypot */}}
+          <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+          {{/* Hidden event fields */}}
+          <input type="hidden" id="reg-slug"     value="{{ $evSlug }}">
+          <input type="hidden" id="reg-title"    value="{{ $.Title }}">
+          <input type="hidden" id="reg-date"     value="{{ $evDate.Format "2006-01-02T15:04:05Z" }}">
+          <input type="hidden" id="reg-location" value="{{ $.Params.event_location | default "" }}">
+          <input type="hidden" id="reg-state"    value="{{ $evState }}">
+
+          <div class="form-field">
+            <label for="reg-name">Full Name <span aria-hidden="true">*</span></label>
+            <input type="text" id="reg-name" required autocomplete="name" placeholder="Your full name">
+          </div>
+          <div class="form-field">
+            <label for="reg-email">Email <span aria-hidden="true">*</span></label>
+            <input type="email" id="reg-email" required autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="form-field">
+            <label for="reg-phone">Phone <span class="form-optional">(optional)</span></label>
+            <input type="tel" id="reg-phone" autocomplete="tel" placeholder="+91 98765 43210">
+          </div>
+          <div class="form-field">
+            <label for="reg-participants">Number of Participants</label>
+            <input type="number" id="reg-participants" value="1" min="1" max="10">
+          </div>
+          <div class="form-field">
+            <label for="reg-notes">Special requirements <span class="form-optional">(optional)</span></label>
+            <textarea id="reg-notes" rows="3" placeholder="Any dietary requirements, accessibility needs, etc."></textarea>
+          </div>
+
+          <div class="form-error" id="reg-error" role="alert" aria-live="polite" hidden></div>
+          <div class="form-success" id="reg-success" hidden>
+            <p>&#10003; Registration received! We will confirm your spot shortly.</p>
+          </div>
+
+          <button type="submit" class="btn-register" id="reg-submit">Register →</button>
+        </form>
+
+        <script>
+        (function() {
+          var form    = document.getElementById('event-reg-form');
+          var errBox  = document.getElementById('reg-error');
+          var okBox   = document.getElementById('reg-success');
+          var btn     = document.getElementById('reg-submit');
+          var workerUrl = {{ $workerUrl | jsonify }};
+
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            errBox.hidden = true;
+            okBox.hidden  = true;
+            btn.disabled  = true;
+            btn.textContent = 'Submitting…';
+
+            var body = {
+              event_slug:     document.getElementById('reg-slug').value,
+              event_title:    document.getElementById('reg-title').value,
+              event_date:     document.getElementById('reg-date').value,
+              event_location: document.getElementById('reg-location').value,
+              state:          document.getElementById('reg-state').value,
+              name:           document.getElementById('reg-name').value.trim(),
+              email:          document.getElementById('reg-email').value.trim(),
+              phone:          document.getElementById('reg-phone').value.trim(),
+              participants:   parseInt(document.getElementById('reg-participants').value) || 1,
+              notes:          document.getElementById('reg-notes').value.trim(),
+              website:        form.querySelector('[name="website"]').value,
+            };
+
+            try {
+              var res = await fetch(workerUrl + '/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+              });
+              var data = await res.json();
+              if (res.status === 409) {
+                showErr('You are already registered for this event.');
+              } else if (!res.ok) {
+                showErr(data.error || 'Something went wrong. Please try again.');
+              } else {
+                form.style.display = 'none';
+                okBox.hidden = false;
+              }
+            } catch {
+              showErr('Network error. Please check your connection and try again.');
+            } finally {
+              btn.disabled    = false;
+              btn.textContent = 'Register →';
+            }
+          });
+
+          function showErr(msg) {
+            errBox.textContent = msg;
+            errBox.hidden = false;
+          }
+        })();
+        </script>
+      </section>
+      {{ end }}
 
       {{/* ── Prev / Next ──────────────────────────────────────────────────── */}}
       {{ if $s.news_show_prev_next }}

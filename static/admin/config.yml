@@ -245,6 +245,11 @@ collections:
             widget: number
             default: 20
             hint: "Max news items shown per page"
+          - label: "[Articles] List Page Size"
+            name: articles_list_page_size
+            widget: number
+            default: 20
+            hint: "Articles shown on page 1 before pagination kicks in (default: 20)"
 
           # ── Navigation ───────────────────────────────────────────────────
 
@@ -333,7 +338,7 @@ collections:
         name: registration_url
         widget: string
         required: false
-        hint: "External link to registration page"
+        hint: "Set to any non-empty value (e.g. 'enabled') to show the inline registration form on this event's page. Leave empty to hide the form."
       - label: Categories
         name: categories
         widget: list

@@ -189,21 +189,18 @@
     </div>{{/* end home-main-cols */}}
 
     {{/* ── From State Chapters ─────────────────────────────────────────────── */}}
-    {{ $stateArticles := where (where site.RegularPages "Section" "articles") "Params.featureinhomepage" true }}
-    {{ $stateNews     := where (where site.RegularPages "Section" "news")     "Params.featureinhomepage" true }}
-    {{ $stateArticles  = $stateArticles.ByLastmod.Reverse | first 6 }}
-    {{ $stateNews      = $stateNews.ByLastmod.Reverse | first 6 }}
-    {{ if or $stateArticles $stateNews }}
+    {{/* Combined latest articles + news from all states, sorted by date */}}
+    {{ $stateContent := where site.RegularPages "Params.states" "!=" nil }}
+    {{ $stateContent  = where $stateContent "Section" "in" (slice "articles" "news") }}
+    {{ $stateContent  = $stateContent.ByLastmod.Reverse | first 6 }}
+    {{ if $stateContent }}
     <div class="home-section home-section--states">
       <div class="section-header">
         <h2 class="section-label">From State Chapters</h2>
         <a class="section-viewall" href="{{ "/states/" | relURL }}">All State Chapters →</a>
       </div>
-
-      {{ if $stateArticles }}
-      <h3 class="state-home-subheading">Articles</h3>
       <div class="post-grid post-grid--3">
-        {{ range $stateArticles }}
+        {{ range $stateContent }}
         {{ $card := . }}
         <article class="post-card">
           {{ with .Params.image }}
@@ -211,7 +208,7 @@
           {{ end }}
           <div class="post-card-body">
             {{ with .Params.states }}
-            <div class="state-chapter-type-badge">{{ index . 0 | title }}</div>
+            <div class="state-chapter-type-badge{{ if eq $card.Section "news" }} state-chapter-type-badge--news{{ end }}">{{ index . 0 | title }}</div>
             {{ end }}
             <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
             {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
@@ -223,33 +220,6 @@
         </article>
         {{ end }}
       </div>
-      {{ end }}
-
-      {{ if $stateNews }}
-      <h3 class="state-home-subheading">News</h3>
-      <div class="post-grid post-grid--3">
-        {{ range $stateNews }}
-        {{ $card := . }}
-        <article class="post-card">
-          {{ with .Params.image }}
-            {{ partial "post-image.html" (dict "page" $card "src" . "width" "600" "alt" $card.Title "class" "post-card-image-link" "href" $card.RelPermalink "loading" "lazy") }}
-          {{ end }}
-          <div class="post-card-body">
-            {{ with .Params.states }}
-            <div class="state-chapter-type-badge state-chapter-type-badge--news">{{ index . 0 | title }}</div>
-            {{ end }}
-            <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-            {{ with .Description }}<p class="post-card-desc">{{ . }}</p>{{ end }}
-            <div class="card-byline">
-              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-              {{ with .Params.author }} · <span>{{ . }}</span>{{ end }}
-            </div>
-          </div>
-        </article>
-        {{ end }}
-      </div>
-      {{ end }}
-
     </div>
     {{ end }}
 
