@@ -1537,6 +1537,28 @@ img {
       padding: 0.4rem 0;
     }
   }
+
+  // Event-specific: portrait poster — centred, width-constrained, never cropped
+  &--event {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+
+    img {
+      width: auto;
+      max-width: 480px;
+      max-height: 680px;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.15);
+
+      @media (max-width: 520px) {
+        max-width: 100%;
+        max-height: none;
+      }
+    }
+  }
 }
 
 .post-header {
